@@ -7,13 +7,13 @@ import 'main.dart';
 import 'upload.dart';
 
 class second extends StatefulWidget {
-  String? url;
+  String url;
   second({
-      this.url,
+      required this.url,
   });
 
   @override
-  State<second> createState() => _secondState(url: url!);
+  State<second> createState() => _secondState(url: url);
 }
 
 class _secondState extends State<second> {

@@ -1,5 +1,6 @@
 
 
+import 'package:big_bucket/phone_auth/register_with_phone.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
-import 'login_screen.dart';
+
 import 'second.dart';
 
 void main() async {
@@ -138,7 +139,7 @@ class _firstState extends State<first> {
             ),
         SizedBox(height: 20,),
         ElevatedButton(
-          onPressed:(){ Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));},
+          onPressed:(){ Navigator.push(context, MaterialPageRoute(builder: (context)=>const RegisterWithPhone()));},
           style: ButtonStyle(
             foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
             backgroundColor: MaterialStateProperty.all<Color>(Colors.purple),
