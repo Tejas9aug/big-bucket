@@ -21,8 +21,8 @@ class _videoplayState extends State<videoplay> {
   VideoPlayerController? _controller;
 
   void initState() {
-    _controller = VideoPlayerController.network(
-      url,
+    _controller = VideoPlayerController.networkUrl(
+      url as Uri,
     )
       ..addListener(() {
         setState(() {});

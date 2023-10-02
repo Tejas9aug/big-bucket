@@ -1,26 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'main.dart';
 import 'upload.dart';
 
 class second extends StatefulWidget {
-  String url;
-  second({
-      required this.url,
-  });
 
   @override
-  State<second> createState() => _secondState(url: url);
+  State<second> createState() => _secondState();
 }
 
 class _secondState extends State<second> {
-  String url;
-  _secondState({
-    required this.url,
-  });
+
 
   GoogleSignIn _googleSignIn = GoogleSignIn();
   final _auth = FirebaseAuth.instance;
@@ -43,129 +37,116 @@ class _secondState extends State<second> {
         .doc(user!.uid)
         .collection('folders')
         .snapshots();
-    return Scaffold(
-      appBar: AppBar(
-        leading: CircleAvatar(
-          radius: 50, // Image radius
-          backgroundImage: NetworkImage(
-            url,
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              _googleSignIn.signOut().then((value) {
-                setState(() {});
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => (first()),
-                  ),
-                );
-              }).catchError((e) {});
-            },
-            icon: Icon(
-              Icons.logout,
-            ),
-          ),
-        ],
-        backgroundColor: Colors.indigo[900],
-        title: Row(
-          children: [
-            Text(
-              'Big',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 35,
-              ),
-            ),
-            Text(
-              'Bucket',
-              style: TextStyle(
-                color: Colors.yellow[700],
-                fontSize: 35,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.blue.shade100,
+        appBar: AppBar(
+
+          elevation: 0.0,
+           centerTitle: true,
+
+          actions: [
+            IconButton(
+              onPressed: () {
+                _googleSignIn.signOut().then((value) {
+                  setState(() {});
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => (first()),
+                    ),
+                  );
+                }).catchError((e) {});
+              },
+              icon: Icon(
+                Icons.logout,
               ),
             ),
           ],
+          backgroundColor: Colors.blue[100],
+          title:
+
+              Text(
+                'BigBucket',
+                  style: GoogleFonts.poppins(
+                      textStyle: TextStyle(color: Colors.indigo[900], fontSize: MediaQuery
+                          .of(context)
+                          .size
+                          .width * 0.07), fontWeight: FontWeight.w600)
+              ),
+
+
+
         ),
-      ),
-      body: Stack(
-        children: [
-          StreamBuilder<QuerySnapshot>(
-            stream: _usersStream,
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasError) {
-                return Text('Something went wrong');
-              }
+        body: Stack(
+          children: [
+            StreamBuilder<QuerySnapshot>(
+              stream: _usersStream,
+              builder:
+                  (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Something went wrong');
+                }
 
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Text("Loading");
-              }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Text("Loading");
+                }
 
-              return ListView(
-                children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                  Map<String, dynamic> data =
-                  document.data()! as Map<String, dynamic>;
-                  return GestureDetector(
-                    onTap: () {
-                      print(
-                        data['type'],
-                      );
-                      print(document.id);
+                return ListView(
+                  children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                    Map<String, dynamic> data =
+                    document.data()! as Map<String, dynamic>;
+                    return GestureDetector(
 
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => (upload(
-                            url: url,
-                            did: document.id,
-                            type: data['type'],
-                          )),
+                      onTap: () {
+                        print(
+                          data['type'],
+                        );
+                        print(document.id);
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => (upload(
+
+                              did: document.id,
+                              type: data['type'],
+                            )),
+                          ),
+                        );
+                      },
+                      child: ListTile(
+
+                        leading: Icon(
+                          Icons.folder,
+                          color: Colors.amber[300],
+                          size: 50,
                         ),
-                      );
-                    },
-                    child: ListTile(
-                      // leading: (data['type'] == "PDF" || data['type'] == "Image")
-                      //     ? ((data['type'] == "PDF")
-                      //         ? (Icon(
-                      //             Icons.picture_as_pdf,
-                      //           ))
-                      //         : (Icon(
-                      //             Icons.image,
-                      //           )))
-                      //     : (Icon(
-                      //         Icons.play_circle_fill,
-                      //       )),
-                      leading: Icon(
-                        Icons.folder,
-                        color: Colors.amber[300],
-                        size: 50,
+                        title: Text(data['name']),
+                        subtitle: Text(data['type']),
                       ),
-                      title: Text(data['name']),
-                      subtitle: Text(data['type']),
-                    ),
-                  );
-                }).toList(),
-              );
-            },
-          ),
-          Positioned(
-            bottom: 10,
-            // left: 0,
-            right: 10,
-            child: Center(
-              child: FloatingActionButton(
-                onPressed: () async {
-                  await showInformationDialog(context);
-                },
-                child: Icon(
-                  Icons.add,
+                    );
+                  }).toList(),
+                );
+              },
+            ),
+            Positioned(
+              bottom: 10,
+              // left: 0,
+              right: 10,
+              child: Center(
+                child: FloatingActionButton(
+                  onPressed: () async {
+                    await showInformationDialog(context);
+                  },
+                  child: Icon(
+                    Icons.add,
+                  ),
                 ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -178,6 +159,7 @@ class _secondState extends State<second> {
         bool isChecked = false;
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
             content: Form(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,

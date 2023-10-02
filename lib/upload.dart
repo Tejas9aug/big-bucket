@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'imageview.dart';
 import 'pdfview.dart';
@@ -15,28 +16,28 @@ import 'videoplay.dart';
 class upload extends StatefulWidget {
   String did;
   String type;
-  String url;
+  //String url;
   upload({
     required this.did,
     required this.type,
-    required this.url,
+   // required this.url,
   });
   @override
   State<upload> createState() => _uploadState(
     did: did,
     type: type,
-    url: url,
+    //url: url,
   );
 }
 
 class _uploadState extends State<upload> {
   String did;
   String type;
-  String url;
+ // String url;
   _uploadState({
     required this.did,
     required this.type,
-    required this.url,
+   // required this.url,
   });
 
   final _auth = FirebaseAuth.instance;
@@ -91,7 +92,9 @@ class _uploadState extends State<upload> {
         .collection(type)
         .snapshots();
     return Scaffold(
+      backgroundColor: Colors.blue.shade100,
       appBar: AppBar(
+        elevation: 0.0,
         actions: [
           IconButton(
             onPressed: () {
@@ -101,7 +104,7 @@ class _uploadState extends State<upload> {
               //       .doc(did)
 
               var catalogues = ref
-                  .doc(user!.uid)
+                  .doc(user.uid)
                   .collection('folders')
                   .doc(did)
                   .collection(type)
@@ -109,7 +112,7 @@ class _uploadState extends State<upload> {
               catalogues.then((value) => value.docs.remove(value));
 
               ref
-                  .doc(user!.uid)
+                  .doc(user.uid)
                   .collection('folders')
                   .doc(did)
                   .delete()
@@ -118,7 +121,7 @@ class _uploadState extends State<upload> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => (second(
-                      url: url,
+
                     )),
                   ),
                 );
@@ -130,30 +133,15 @@ class _uploadState extends State<upload> {
             ),
           ),
         ],
-        backgroundColor: Colors.indigo[900],
-        leading: CircleAvatar(
-          radius: 50, // Image radius
-          backgroundImage: NetworkImage(
-            url,
-          ),
-        ),
-        title: Row(
-          children: [
-            Text(
-              'Big',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 35,
-              ),
-            ),
-            Text(
-              'Bucket',
-              style: TextStyle(
-                color: Colors.yellow[700],
-                fontSize: 35,
-              ),
-            ),
-          ],
+        backgroundColor: Colors.blue[100],
+
+        title:  Text(
+            'BigBucket',
+            style: GoogleFonts.poppins(
+                textStyle: TextStyle(color: Colors.indigo[900], fontSize: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.07), fontWeight: FontWeight.w600)
         ),
       ),
       body: Stack(
